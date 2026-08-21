@@ -1,0 +1,51 @@
+{
+  "text": {
+    "headings": { "value": "{neutral.800}" },
+    "body": { "value": "{neutral.700}" },
+    "action": { "value": "{primary.700}" },
+    "action-hover": { "value": "{primary.800}" },
+    "disabled": { "value": "{neutral.600}" },
+    "information": { "value": "{information.500}" },
+    "warning": { "value": "{warning.default}" },
+    "success": { "value": "{success.600}" },
+    "error": { "value": "{error.default}" },
+    "on-action": { "value": "{neutral.white}" },
+    "placeholder": { "value": "{neutral.700}" },
+    "secondary": { "value": "{primary.700}" }
+  },
+  "icons": {
+    "default": { "value": "{neutral.800}" },
+    "action": { "value": "{primary.700}" },
+    "action-hover": { "value": "{primary.800}" },
+    "disabled": { "value": "{neutral.600}" },
+    "information": { "value": "{information.500}" },
+    "warning": { "value": "{warning.default}" },
+    "success": { "value": "{success.600}" },
+    "error": { "value": "{error.default}" },
+    "on-action": { "value": "{neutral.white}" }
+  },
+  "surface": {
+    "page": { "value": "{neutral.white}" },
+    "default": { "value": "{neutral.white}" },
+    "action": { "value": "{primary.default}" },
+    "action-hover": { "value": "{primary.600}" },
+    "error": { "value": "{error.100}" },
+    "information": { "value": "{information.100}" },
+    "success": { "value": "{success.100}" },
+    "warning": { "value": "{warning.100}" },
+    "action-hover-light": { "value": "{primary.100}" },
+    "subtle": { "value": "{neutral.300}" },
+    "disabled": { "value": "{neutral.200}" }
+  },
+  "border": {
+    "default": { "value": "{neutral.300}" },
+    "disabled": { "value": "{neutral.400}" },
+    "error": { "value": "{error.300}" },
+    "information": { "value": "{information.300}" },
+    "warning": { "value": "{warning.300}" },
+    "success": { "value": "{success.600}" },
+    "action-hover": { "value": "{primary.600}" },
+    "action": { "value": "{primary.default}" },
+    "focus": { "value": "{primary.default}" }
+  }
+}
