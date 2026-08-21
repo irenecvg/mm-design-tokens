@@ -2,6 +2,8 @@
 
 Design tokens, built with [Style Dictionary](https://styledictionary.com/).
 
+**[View the token showcase →](https://irenecvg.github.io/mm-design-tokens/)**
+
 The source of truth is plain JSON under `tokens/`. The build resolves every
 `{reference}` between files into a single flat-nested output — no formats
 other than JSON are generated here. Platform-specific output (SCSS, CSS,
@@ -47,7 +49,11 @@ Outputs a single resolved `build/tokens.json`.
 
 ## Consuming these tokens
 
-Until this is published, consume it as a local/git dependency and read
-`build/tokens.json` directly, or import the resolved values into your own
-build step (e.g. a Style Dictionary config in the consuming repo that reads
-this package's output as its `source` and generates SCSS/CSS from it).
+Published as [`@irenecvg/mm-design-tokens`](https://www.npmjs.com/package/@irenecvg/mm-design-tokens):
+
+```sh
+npm install @irenecvg/mm-design-tokens
+```
+
+`build/tokens.json` is the resolved output — read it directly, or feed it
+into your own build step to generate SCSS/CSS/etc.
