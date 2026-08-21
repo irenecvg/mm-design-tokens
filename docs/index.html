@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mm-design-tokens</title>
+  <style>
+    :root {
+      --page-bg: #fffcf7;
+      --page-text: #3d3530;
+      --page-muted: #5a4e43;
+      --page-border: #e0d8cc;
+      --page-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem 1.25rem 4rem;
+      background: var(--page-bg);
+      color: var(--page-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 0.25rem;
+    }
+
+    .subtitle {
+      color: var(--page-muted);
+      margin: 0 0 2.5rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      border-bottom: 1px solid var(--page-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--page-muted);
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .swatch {
+      border: 1px solid var(--page-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      font-size: 0.75rem;
+    }
+
+    .swatch-color {
+      height: 64px;
+    }
+
+    .swatch-label {
+      padding: 0.5rem;
+      background: #fff;
+    }
+
+    .swatch-name {
+      font-family: var(--page-mono);
+      display: block;
+      word-break: break-all;
+    }
+
+    .swatch-value {
+      color: var(--page-muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--page-border);
+    }
+
+    th {
+      color: var(--page-muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    td:first-child,
+    th:first-child {
+      font-family: var(--page-mono);
+    }
+
+    .scale-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .scale-name {
+      font-family: var(--page-mono);
+      font-size: 0.8rem;
+      width: 130px;
+      flex-shrink: 0;
+    }
+
+    .scale-bar {
+      background: #c1502e;
+      height: 14px;
+      border-radius: 2px;
+    }
+
+    .scale-px {
+      font-size: 0.8rem;
+      color: var(--page-muted);
+      margin-left: 0.5rem;
+    }
+
+    .radius-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .radius-item {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--page-muted);
+    }
+
+    .radius-box {
+      width: 64px;
+      height: 64px;
+      background: #f0c5ba;
+      border: 2px solid #c1502e;
+      margin-bottom: 0.4rem;
+    }
+
+    #error {
+      color: #a34638;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>mm-design-tokens</h1>
+    <p class="subtitle">
+      Design tokens built with Style Dictionary — this page reads
+      <code>tokens.json</code> directly and renders every value below.
+    </p>
+
+    <p id="error"></p>
+
+    <section id="section-colors">
+      <h2>Colors</h2>
+      <div id="color-primitives"></div>
+      <div id="color-semantic"></div>
+      <div id="color-usage"></div>
+    </section>
+
+    <section id="section-typography">
+      <h2>Typography</h2>
+      <div id="typography"></div>
+    </section>
+
+    <section id="section-scale">
+      <h2>Spacing scale</h2>
+      <div id="scale"></div>
+    </section>
+
+    <section id="section-border">
+      <h2>Border width &amp; radius</h2>
+      <div id="border"></div>
+    </section>
+  </main>
+
+  <script>
+    async function main() {
+      let tokens;
+      try {
+        const res = await fetch("./tokens.json");
+        tokens = await res.json();
+      } catch (e) {
+        document.getElementById("error").textContent =
+          "Couldn't load tokens.json — " + e.message;
+        return;
+      }
+
+      renderColorPrimitives(tokens.color);
+      renderColorGroup("Semantic", tokens, [
+        "primary",
+        "error",
+        "success",
+        "warning",
+        "information",
+        "neutral",
+      ], "color-semantic");
+      renderFlatColors("Usage (text / icons / surface / border)", tokens, [
+        "text",
+        "icons",
+        "surface",
+        "border",
+      ], "color-usage");
+      renderTypography(tokens.font, tokens.typography);
+      renderScale(tokens.scale);
+      renderBorder(tokens["border-width"], tokens["border-radius"]);
+    }
+
+    function el(tag, props = {}, children = []) {
+      const node = document.createElement(tag);
+      Object.entries(props).forEach(([k, v]) => {
+        if (k === "text") node.textContent = v;
+        else node.setAttribute(k, v);
+      });
+      children.forEach((c) => node.appendChild(c));
+      return node;
+    }
+
+    function swatch(name, hex) {
+      const color = el("div", { class: "swatch-color", style: `background:${hex}` });
+      const label = el("div", { class: "swatch-label" }, [
+        el("span", { class: "swatch-name", text: name }),
+        el("span", { class: "swatch-value", text: hex }),
+      ]);
+      return el("div", { class: "swatch" }, [color, label]);
+    }
+
+    function renderColorPrimitives(colorObj) {
+      const container = document.getElementById("color-primitives");
+      for (const [family, shades] of Object.entries(colorObj)) {
+        container.appendChild(el("h3", { text: family }));
+        const grid = el("div", { class: "swatch-grid" });
+        for (const [shade, hex] of Object.entries(shades)) {
+          grid.appendChild(swatch(`--color-${family}${shade}`, hex));
+        }
+        container.appendChild(grid);
+      }
+    }
+
+    function renderColorGroup(heading, tokens, groups, targetId) {
+      const container = document.getElementById(targetId);
+      container.appendChild(el("h3", { text: heading }));
+      for (const group of groups) {
+        const grid = el("div", { class: "swatch-grid" });
+        for (const [key, hex] of Object.entries(tokens[group])) {
+          if (typeof hex !== "string") continue;
+          grid.appendChild(swatch(`--${group}-${key}`, hex));
+        }
+        container.appendChild(grid);
+      }
+    }
+
+    function renderFlatColors(heading, tokens, groups, targetId) {
+      const container = document.getElementById(targetId);
+      container.appendChild(el("h3", { text: heading }));
+      const grid = el("div", { class: "swatch-grid" });
+      for (const group of groups) {
+        for (const [key, hex] of Object.entries(tokens[group])) {
+          grid.appendChild(swatch(`--${group}-${key}`, hex));
+        }
+      }
+      container.appendChild(grid);
+    }
+
+    function renderTypography(font, typography) {
+      const container = document.getElementById("typography");
+
+      container.appendChild(el("h3", { text: "Font families" }));
+      const fontTable = el("table");
+      fontTable.appendChild(
+        el("tr", {}, [el("th", { text: "token" }), el("th", { text: "value" })]),
+      );
+      fontTable.appendChild(
+        el("tr", {}, [
+          el("td", { text: "--fonts-primary" }),
+          el("td", { text: font.primary }),
+        ]),
+      );
+      fontTable.appendChild(
+        el("tr", {}, [
+          el("td", { text: "--fonts-secondary" }),
+          el("td", { text: font.secondary }),
+        ]),
+      );
+      container.appendChild(fontTable);
+
+      container.appendChild(el("h3", { text: "Type scale (px, per breakpoint)" }));
+      const table = el("table");
+      table.appendChild(
+        el("tr", {}, [
+          el("th", { text: "name" }),
+          el("th", { text: "property" }),
+          el("th", { text: "mobile" }),
+          el("th", { text: "tablet" }),
+          el("th", { text: "desktop" }),
+        ]),
+      );
+      for (const [name, props] of Object.entries(typography)) {
+        for (const [prop, bp] of Object.entries(props)) {
+          table.appendChild(
+            el("tr", {}, [
+              el("td", { text: name }),
+              el("td", { text: prop }),
+              el("td", { text: bp.mobile ?? "—" }),
+              el("td", { text: bp.tablet ?? "—" }),
+              el("td", { text: bp.desktop ?? "—" }),
+            ]),
+          );
+        }
+      }
+      container.appendChild(table);
+    }
+
+    function renderScale(scale) {
+      const container = document.getElementById("scale");
+      const maxPx = Math.max(...Object.values(scale).filter((v) => v > 0));
+      for (const [key, px] of Object.entries(scale)) {
+        const row = el("div", { class: "scale-row" });
+        row.appendChild(el("span", { class: "scale-name", text: `--scale${key}` }));
+        const width = Math.max(2, Math.round((px / maxPx) * 300));
+        row.appendChild(el("div", { class: "scale-bar", style: `width:${width}px` }));
+        row.appendChild(el("span", { class: "scale-px", text: `${px}px` }));
+        container.appendChild(row);
+      }
+    }
+
+    function renderBorder(widths, radii) {
+      const container = document.getElementById("border");
+
+      container.appendChild(el("h3", { text: "Border width" }));
+      const widthGrid = el("div", { class: "radius-grid" });
+      for (const [key, px] of Object.entries(widths)) {
+        const box = el("div", {
+          class: "radius-box",
+          style: `border-width:${px}px;background:transparent;border-radius:0`,
+        });
+        widthGrid.appendChild(
+          el("div", { class: "radius-item" }, [box, document.createTextNode(`--border-width-${key} (${px}px)`)]),
+        );
+      }
+      container.appendChild(widthGrid);
+
+      container.appendChild(el("h3", { text: "Border radius" }));
+      const radiusGrid = el("div", { class: "radius-grid" });
+      for (const [key, px] of Object.entries(radii)) {
+        const roundPx = key === "round" ? 32 : px;
+        const box = el("div", {
+          class: "radius-box",
+          style: `border-radius:${roundPx}px`,
+        });
+        radiusGrid.appendChild(
+          el("div", { class: "radius-item" }, [box, document.createTextNode(`--border-radius-${key} (${px}px)`)]),
+        );
+      }
+      container.appendChild(radiusGrid);
+    }
+
+    main();
+  </script>
+</body>
+</html>
